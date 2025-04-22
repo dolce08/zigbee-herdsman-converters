@@ -2,7 +2,7 @@ import * as fz from "../converters/fromZigbee";
 import * as tz from "../converters/toZigbee";
 import * as exposes from "../lib/exposes";
 import * as reporting from "../lib/reporting";
-import type {DefinitionWithExtend} from "../lib/types";
+import {assertString, getFromLookup, getOptions} from "../lib/utils";
 import type {DefinitionWithExtend, Tz, Zh} from "../lib/types";
 
 const tzLocal = {
@@ -26,7 +26,7 @@ export const definitions: DefinitionWithExtend[] = [
         vendor: "Smartwings",
         description: "Roller shade",
         fromZigbee: [fz.cover_position_tilt, fz.battery],
-        toZigbee: [tz.cover_state, tz.cover_position_tilt],
+        toZigbee: [tzLocal.backwards_cover_state, tz.cover_position_tilt],
         meta: {battery: {dontDividePercentage: true}, coverInverted: true},
         configure: async (device, coordinatorEndpoint) => {
             const endpoint = device.getEndpoint(1);
