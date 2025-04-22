@@ -3,6 +3,19 @@ import * as tz from "../converters/toZigbee";
 import * as exposes from "../lib/exposes";
 import * as reporting from "../lib/reporting";
 import type {DefinitionWithExtend} from "../lib/types";
+import type {DefinitionWithExtend, Tz, Zh} from "../lib/types";
+
+const tzLocal = {
+    backwards_cover_state: {
+        key: ['state'],
+        convertSet: async (entity: Zh.Endpoint, key: string, value: number | string, meta: Tz.Meta) => {
+            const lookup = {open: 'downClose', close: 'upOpen', stop: 'stop', on: 'downClose', off: 'upOpen'};
+            assertString(value, key);
+            value = value.toLowerCase();
+            await entity.command('closuresWindowCovering', getFromLookup(value, lookup), {}, getOptions(meta.mapped, entity));
+        },
+    },
+};
 
 const e = exposes.presets;
 
