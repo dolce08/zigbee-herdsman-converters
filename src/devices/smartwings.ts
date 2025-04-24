@@ -12,7 +12,7 @@ const tzLocal = {
     backwards_cover_state: {
         key: ['state'],
         convertSet: async (entity, key, value, meta) => {
-            const lookup = { open: 'downClose', close: 'upOpen', stop: 'stop', on: 'downClose', off: 'upOpen' };
+            const lookup = { open: 'upOpen', close: 'downClose', stop: 'stop', on: 'upOpen', off: 'downClose' };
             assertString(value, key);
             value = value.toLowerCase();
             await entity.command('closuresWindowCovering', getFromLookup(value, lookup), {}, getOptions(meta.mapped, entity));
@@ -29,7 +29,7 @@ export default [
         description: 'Roller shade',
         fromZigbee: [fz.cover_position_tilt, fz.battery],
         toZigbee: [tzLocal.backwards_cover_state, tz.cover_position_tilt],
-        meta: { battery: { dontDividePercentage: true }, coverInverted: true },
+        meta: { battery: { dontDividePercentage: true }, coverInverted: false },
         configure: async (device, coordinatorEndpoint) => {
             const endpoint = device.getEndpoint(1);
             await reporting.bind(endpoint, coordinatorEndpoint, ['genPowerCfg', 'closuresWindowCovering']);
